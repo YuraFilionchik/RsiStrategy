@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<AssemblyVersion>1.1.*</AssemblyVersion>
+	<Deterministic>false</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StockSharp.Algo" Version="5.0.210" />
+    <PackageReference Include="StockSharp.Binance" Version="5.0.191" />
+    <PackageReference Include="StockSharp.BusinessEntities" Version="5.0.200" />
+    <PackageReference Include="StockSharp.Logging" Version="5.0.195" />
+    <PackageReference Include="StockSharp.Messages" Version="5.0.206" />
+    <PackageReference Include="StockSharp.Xaml" Version="5.0.220" />
+    <PackageReference Include="StockSharp.Xaml.Charting" Version="5.0.221" />
+  </ItemGroup>
+
+</Project>

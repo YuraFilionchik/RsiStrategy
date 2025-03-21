@@ -1,0 +1,12 @@
+E:\Trading\trade soft\RsiStrategy\bin\Debug\net6.0-windows\RsiStrategy.deps.json
+E:\Trading\trade soft\RsiStrategy\bin\Debug\net6.0-windows\RsiStrategy.dll
+E:\Trading\trade soft\RsiStrategy\bin\Debug\net6.0-windows\RsiStrategy.pdb
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.csproj.AssemblyReference.cache
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.GeneratedMSBuildEditorConfig.editorconfig
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.AssemblyInfoInputs.cache
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.AssemblyInfo.cs
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.csproj.CoreCompileInputs.cache
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.dll
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\refint\RsiStrategy.dll
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.pdb
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\ref\RsiStrategy.dll
