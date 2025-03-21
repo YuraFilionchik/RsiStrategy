@@ -1,6 +1,7 @@
 ﻿namespace SuperStrategy
 {
     using System;
+    using Ecng.ComponentModel;
     using Ecng.Logging;
     using GeneticSharp;
     using StockSharp.Algo.Candles;
@@ -123,7 +124,8 @@
                 // Если свеча не финальная, то выходим
                 if (candle.State != CandleStates.Finished)
                     return;
-                
+                _currentPNL = CalculateCurrentPnL(candle.ClosePrice);
+
                 if (Portfolio != null && !isPortfolioInitialized)
                     InitializePortfolio(candle.OpenPrice);
                 

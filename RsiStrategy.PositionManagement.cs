@@ -18,6 +18,8 @@
         private decimal _currentStopLoss = 0;
         private decimal _currentTrailingStop = 0;
         private DateTimeOffset _positionOpenTime;
+        private decimal _openPricePosition = 0;
+        private decimal _currentPNL = 0;
 
         /// <summary>
         /// Открытие позиции
@@ -33,9 +35,10 @@
                 }
                 else
                 {
-                   order = SellMarket(coinVolume);
+                    order = SellMarket(coinVolume);
                 }
                 // Обновление состояния стратегии
+                _openPricePosition = price;
                 _positionOpenTime = CurrentTime;
                 _isPositionOpened = true;
                 _currentStopLoss = GetStopLossPriceByATR(_currentAtr, side, price);
@@ -78,26 +81,13 @@
                     return;
                 }
 
-                //LONG
-                if (position > 0 && currentPrice <= _currentStopLoss)
-                {
-                    CloseCurrentPosition("Stop loss");
-                    _slCount++;
-                    return;
-                }
-                //SHORT
-                else if(position < 0 && currentPrice >= _currentStopLoss)
-                {
-                    CloseCurrentPosition("Stop loss");
-                    _slCount++;
-                    return;
-                }
-                
+                if (CheckStopLossForCurrentPosition(currentPrice)) return;
+
                 if ((_currentRsi < RsiCloseShort && Position < 0) ||
                         (_currentRsi > RsiCloseLong && Position > 0))
                     CloseCurrentPosition("По сигналу");
                 return;
-                
+
                 // Определение направления позиции
                 //Sides positionSide = position > 0 ? Sides.Buy : Sides.Sell;
 
@@ -143,7 +133,7 @@
         /// <summary>
         /// Закрытие позиции
         /// </summary>
-     
+
         void CloseCurrentPosition(string msg)
         {
             var value = GetCurrentPosition();
@@ -154,10 +144,10 @@
             order.Comment = $"Закрытие позиции. {msg}";
             _isPositionOpened = false;
         }
-        
+
         private decimal GetCurrentPosition()
         {
-            
+
             if (Position == 0)
             {
                 var p = Positions?.FirstOrDefault()?.CurrentValue;
@@ -165,8 +155,57 @@
                     return (decimal)p;
 
             }
+
+            return Position;
+        }
+
+        /// <summary>
+        /// Check and Close current position if SL
+        /// </summary>
+        /// <param name="currentPrice"></param>
+        private bool CheckStopLossForCurrentPosition(decimal currentPrice)
+        {
+            var position = GetCurrentPosition();
+            //LONG
+            if (position > 0 && currentPrice <= _currentStopLoss)
+            {
+                var PnL = CalculateCurrentPnL(currentPrice);
+                CloseCurrentPosition($"(LONG) - Stop loss, PnL={PnL}");
+                _slCount++;
+                return true;
+            }
+            //SHORT
+            else if (position < 0 && currentPrice >= _currentStopLoss)
+            {
+                var PnL = CalculateCurrentPnL(currentPrice);
+                CloseCurrentPosition($"(SHORT) - Stop loss, PnL={PnL}");
+                _slCount++;
+                return true ;
+            }
+
+            return false;
+        }
+
+        private bool CheckTakeProfitForCurrentPosition(decimal price)
+        {
             
-                return Position;
+            if (_currentPNL < 0) return false;
+            if ((_currentRsi < RsiCloseShort && Position < 0) ||
+                (_currentRsi > RsiCloseLong && Position > 0))
+                {
+                    CloseCurrentPosition("По сигналу");
+                    return true;
+                }
+            return false;
+        }
+
+        private decimal CalculateCurrentPnL(decimal currentPrice)
+        {
+            var position = GetCurrentPosition();
+            if (position == 0 || currentPrice == 0 || _openPricePosition == 0) return 0;
+            var deltaPrice = position > 0 ? currentPrice - _openPricePosition : _openPricePosition - currentPrice;
+            return deltaPrice * position;
         }
     }
+
 }
