@@ -83,46 +83,8 @@
 
                 if (CheckStopLossForCurrentPosition(currentPrice)) return;
 
-                if ((_currentRsi < RsiCloseShort && Position < 0) ||
-                        (_currentRsi > RsiCloseLong && Position > 0))
-                    CloseCurrentPosition("По сигналу");
-                return;
-
-                // Определение направления позиции
-                //Sides positionSide = position > 0 ? Sides.Buy : Sides.Sell;
-
-                //// Проверка временного выхода (максимальное время в сделке)
-                //if ((CurrentTime - _positionOpenTime).TotalMinutes > 60)
-                //{
-                //    ClosePosition(positionSide, currentPrice, "Превышено максимальное время в сделке (60 минут)");
-                //    return;
-                //}
-
-                //// Проверка временного выхода для половины позиции (30 минут)
-                //if ((CurrentTime - _positionOpenTime).TotalMinutes > 30 && Math.Abs(position) == TradeVolume)
-                //{
-                //    ClosePartialPosition(positionSide, currentPrice, 0.5m, "Половина позиции закрыта по времени (30 минут)");
-                //}
-
-                //// Проверка срабатывания стоп-лосса
-                //bool isStopLossTriggered = positionSide == Sides.Buy
-                //    ? currentPrice <= _currentStopLoss
-                //    : currentPrice >= _currentStopLoss;
-
-                //if (isStopLossTriggered)
-                //{
-                //    ClosePosition(positionSide, currentPrice, "Сработал Stop-Loss");
-                //    return;
-                //}
-
-                //// Проверка срабатывания тейк-профитов и другой логики управления позицией
-                //CheckTakeProfitLevels(positionSide, currentPrice, candle);
-
-                //// Проверка сигналов разворота
-                //if (CheckReverseSignals(candle, positionSide))
-                //{
-                //    ClosePosition(positionSide, currentPrice, "Сигнал разворота");
-                //}
+                if (CheckTakeProfitForCurrentPosition(currentPrice)) return;
+                
             }
             catch (Exception ex)
             {
@@ -169,16 +131,14 @@
             //LONG
             if (position > 0 && currentPrice <= _currentStopLoss)
             {
-                var PnL = CalculateCurrentPnL(currentPrice);
-                CloseCurrentPosition($"(LONG) - Stop loss, PnL={PnL}");
+                CloseCurrentPosition($"(LONG) - Stop loss, PnL={_currentPNL}");
                 _slCount++;
                 return true;
             }
             //SHORT
             else if (position < 0 && currentPrice >= _currentStopLoss)
             {
-                var PnL = CalculateCurrentPnL(currentPrice);
-                CloseCurrentPosition($"(SHORT) - Stop loss, PnL={PnL}");
+                CloseCurrentPosition($"(SHORT) - Stop loss, PnL={_currentPNL}");
                 _slCount++;
                 return true ;
             }
@@ -190,13 +150,19 @@
         {
             
             if (_currentPNL < 0) return false;
-            if ((_currentRsi < RsiCloseShort && Position < 0) ||
-                (_currentRsi > RsiCloseLong && Position > 0))
+            if (_currentRsi < RsiCloseShort && Position < 0)
                 {
-                    CloseCurrentPosition("По сигналу");
-                    return true;
+                //SHORT
+                CloseCurrentPosition($"(SHORT) - По сигналу, PnL={_currentPNL}");
+                return true;
                 }
-            return false;
+            else if ((_currentRsi > RsiCloseLong && Position > 0))
+            {
+                //LONG
+                CloseCurrentPosition($"(LONG) - По сигналу, PnL={_currentPNL}");
+                return true;
+            }
+                return false;
         }
 
         private decimal CalculateCurrentPnL(decimal currentPrice)
