@@ -121,6 +121,10 @@
         {
             try
             {
+                if (_startTimeStrategy.Year < 1900)
+                {
+                    _startTimeStrategy = CurrentTime;
+                }
                 // Если свеча не финальная, то выходим
                 if (candle.State != CandleStates.Finished)
                     return;

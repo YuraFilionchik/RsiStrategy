@@ -22,6 +22,7 @@ namespace SuperStrategy
     public partial class RsiStrategy : Strategy
     {
         public static readonly DateTime BuildTimestamp = DateTime.Now;
+        private DateTimeOffset _startTimeStrategy;
         ///<summary>
         /// Конструктор стратегии
         /// </summary>
@@ -49,7 +50,7 @@ namespace SuperStrategy
                 Stop(new("Плохие данные Security"));
             }
             InitializeIndicators();
-
+            
             // Логирование запуска стратегии
             LogInfo("Стратегия запущена.");
 
@@ -69,7 +70,6 @@ namespace SuperStrategy
 
             // Подписываемся на свечи
             Subscribe(subscription);
-           
         }
 
         protected override void OnStopped()
@@ -157,7 +157,7 @@ namespace SuperStrategy
                         _lossCount++;
                         _losingPnL += Math.Abs(pnl);
                     }
-
+                    
                     _lastPNL = pnl;
                     if (_chart != null)
                     {
@@ -167,6 +167,18 @@ namespace SuperStrategy
                         
                     }
 
+                    //TEST ONLY FOR BACKTESTS
+                    if (_totalPnL < 9 &&
+                        (CurrentTime - _startTimeStrategy).TotalDays > 80)
+                    {
+                        LogWarning($"Слабая стратегия, не тратим ресурсы. Total PNL = {_totalPnL} ({CurrentTime})");
+                        Stop();
+                        return;
+                    }
+                    
+                    
+                    //TEST ONLY FOR BACKTESTS
+                                       
 
                     // Обновляем статистику
                     decimal winRate = (_winCount + _lossCount) > 0 ? (decimal)_winCount / (_winCount + _lossCount) : 0;

@@ -69,8 +69,8 @@
             _timeFrame = Param("TimeFrame", DataType.TimeFrame(TimeSpan.FromMinutes(5)))
                 .SetDisplay("Таймфрейм", "Таймфрейм для основной торговли (5 минут)", "Таймфреймы");
 
-            _checkTrend = Param("Trend filter", true)
-                .SetDisplay("Фильтр по тренду", "Открывать позиции только по тренду", "Фильтры");
+            //_checkTrend = Param("Trend filter", true)
+            //    .SetDisplay("Фильтр по тренду", "Открывать позиции только по тренду", "Фильтры");
 
             _rsiOpenLong = Param("RSI Open Long", 24)
                 .SetDisplay("Открывать Long если RSI ниже этого значения, 30", "", "Управление позицией");
@@ -218,7 +218,8 @@
 
         public bool CheckTrend
         {
-            get => _checkTrend.Value;
+            get => true;
+            //get => _checkTrend.Value;
             set => _checkTrend.Value = value;
         }
 

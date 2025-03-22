@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RsiStrategy")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.1.*")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+74845b5fd3239126202cf7df8e8914dd1643718a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cf456e959f642ba999b914a0bf930e6502e3bdd")]
 [assembly: System.Reflection.AssemblyProductAttribute("RsiStrategy")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RsiStrategy")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.1.*")]

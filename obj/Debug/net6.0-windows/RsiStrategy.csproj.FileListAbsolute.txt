@@ -10,3 +10,4 @@ E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.dll
 E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\refint\RsiStrategy.dll
 E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.pdb
 E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\ref\RsiStrategy.dll
+E:\Trading\trade soft\RsiStrategy\obj\Debug\net6.0-windows\RsiStrategy.sourcelink.json
