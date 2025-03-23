@@ -50,6 +50,8 @@
         {
             try
             {
+                if (IsOptimizationMode) return;
+                
                 // Инициализация графика
                 _chart = GetChart();
 
@@ -103,21 +105,7 @@
             }
         }
 
-        //void DrawLineOnChart(IChartArea area, decimal value, Color color)
-        //{
-        //    return;
-        //    if (_chart == null)
-        //        return;
-        //    var lineElement = _chart.CreateLineElement();
-        //    lineElement.Color = color;
-        //    lineElement.StrokeThickness = 2;
-        //    _chart.AddElement(area, lineElement);
-        //    var data = _chart.CreateData();
-        //    data.Group(StartedTime).Add(lineElement, value);
-        //    _chart.Draw(data);
-
-        //}
-        
+              
 
         /// <summary>
         /// Обновление графика
@@ -126,6 +114,8 @@
         {
             try
             {
+                if (IsOptimizationMode) return;
+                
                 if (_chart == null)
                     return;
                 

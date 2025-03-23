@@ -17,12 +17,12 @@
         /// </summary>
         private void InitializeLogging()
         {
-            LogLevel = Ecng.Logging.LogLevels.Error;
             try
             {
                 // Получаем существующий LogManager
                 var logManager = Ecng.Logging.LogManager.Instance;
                 //logManager.LocalTimeZone = TimeZoneInfo.Local;
+                if (IsOptimizing()) logManager.Application.LogLevel = Ecng.Logging.LogLevels.Warning;
                 
                 // Добавляем слушателя для файла
                 if (LogToFile)
@@ -33,16 +33,18 @@
                     logManager.Listeners.Add(fileLogListener);
                     LogInfo($"Логирование в файл инициализировано: {logFileName}");
                 }
-                
+
                 // Добавляем GUI слушателя
                 // Для доступа к монитору логов в Designer
                 var ConsoleListener = new Ecng.Logging.ConsoleLogListener();
                 if (LogToConsole)
-                 {
+                {
                     logManager.Listeners.Add(ConsoleListener);
                     LogInfo($"Логирование в консоль инициализировано");
-                 }
+                }
 
+                LogLevel = Ecng.Logging.LogLevels.Warning;
+                
                 // Добавляем источник (стратегию)
                 logManager.Sources.Add(this);
 
@@ -51,7 +53,7 @@
             {
                 Console.WriteLine($"Ошибка при инициализации логирования: {ex.Message}");
             }
-            
+
         }
 
         private void StopLogging()
@@ -80,5 +82,13 @@
             if (exception.InnerException != null)
                 LogError($"Inner: {exception.InnerException.Message}");
         }
+
+
+        private void LogInfo(string message)
+        {
+            if (IsOptimizationMode) return;
+            base.LogInfo(message);
+        }
     }
+        
 }

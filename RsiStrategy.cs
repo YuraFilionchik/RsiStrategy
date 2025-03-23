@@ -11,6 +11,7 @@ namespace SuperStrategy
     using StockSharp.Algo.Candles;
     using StockSharp.Algo.Indicators;
     using StockSharp.Algo.Strategies;
+    using StockSharp.Algo.Testing;
     using StockSharp.BusinessEntities;
     using StockSharp.Charting;
     using StockSharp.Logging;
@@ -23,12 +24,14 @@ namespace SuperStrategy
     {
         public static readonly DateTime BuildTimestamp = DateTime.Now;
         private DateTimeOffset _startTimeStrategy;
+        private bool IsOptimizationMode;
         ///<summary>
         /// Конструктор стратегии
         /// </summary>
         public RsiStrategy()
         {
             Name = "RSI";
+            
             // Инициализация логирования
             InitializeLogging();
 
@@ -53,7 +56,17 @@ namespace SuperStrategy
             
             // Логирование запуска стратегии
             LogInfo("Стратегия запущена.");
-
+            IsOptimizationMode = IsOptimizing();
+            if (IsBacktesting)
+            {                
+                if (IsOptimizationMode)
+                    LogWarning("Running in optimazing mode");
+                else
+                    LogWarning("Running in backtesting mode");                
+            }
+            else
+                LogWarning("Running in Live mode");
+            IsOptimizationMode = IsOptimizing();
             // Добавляем индикаторы в коллекцию стратегии
             AddIndicatorsToStrategy();
             InitializeStatistics();
@@ -100,7 +113,7 @@ namespace SuperStrategy
             _isPositionOpened = Position != 0;
 
             var chart = _chart;
-            if (chart != null)
+            if (chart != null &&  (!IsOptimizationMode))
             {
                 var data = chart.CreateData();
                 data.Group(trade.Trade.ServerTime).Add(_tradesElement, trade);
@@ -168,17 +181,17 @@ namespace SuperStrategy
                     }
 
                     //TEST ONLY FOR BACKTESTS
-                    if (_totalPnL < 9 &&
-                        (CurrentTime - _startTimeStrategy).TotalDays > 80)
+                    if (IsOptimizationMode)
                     {
-                        LogWarning($"Слабая стратегия, не тратим ресурсы. Total PNL = {_totalPnL} ({CurrentTime})");
-                        Stop();
-                        return;
+                        var relativePnL = 100 * _totalPnL / TradeVolume;
+                        if ((relativePnL < 10 && (CurrentTime - _startTimeStrategy).TotalDays > 80) ||
+                           (relativePnL < -30 && (CurrentTime - _startTimeStrategy).TotalDays > 30))
+                        {
+                            LogWarning($"Слабая стратегия, не тратим ресурсы. Total PNL = {_totalPnL} ({CurrentTime})");
+                            Stop();
+                            return;
+                        }
                     }
-                    
-                    
-                    //TEST ONLY FOR BACKTESTS
-                                       
 
                     // Обновляем статистику
                     decimal winRate = (_winCount + _lossCount) > 0 ? (decimal)_winCount / (_winCount + _lossCount) : 0;
@@ -235,6 +248,8 @@ namespace SuperStrategy
         {
             try
             {
+                if (IsOptimizationMode) return;
+                
                 // Расчет метрик производительности
                 decimal winRate = _winCount + _lossCount > 0
                     ? (decimal)_winCount / (_winCount + _lossCount)
@@ -314,6 +329,24 @@ namespace SuperStrategy
             //Portfolio.StrategyId = this.Id.ToString();
 
             isPortfolioInitialized = true;
+        }
+
+        private bool IsOptimizing()
+        {
+            // Check if we're running in optimization mode
+            // This property might be available as a parameter on your strategy
+            var optimizing = Parameters.TryGetValue("IsOptimizing", out var param) &&
+                            param is IStrategyParam optParam &&
+                            optParam.Value != null &&
+                            (bool)optParam.Value;
+
+            // Alternative check - optimization often disables chart drawing
+            if (!optimizing)
+            {
+                optimizing = GetChart() == null;
+            }
+
+            return optimizing && IsBacktesting;
         }
     }
 }

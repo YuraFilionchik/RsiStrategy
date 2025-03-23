@@ -51,10 +51,10 @@
             _slowEmaPeriod = Param("SlowEmaPeriod", 21)
                 .SetDisplay("Период медленной EMA", "Период для медленной EMA (по умолчанию 21)", "Индикаторы тренда");
 
-            _longEmaPeriod = Param("LongEmaPeriod", 70)
+            _longEmaPeriod = Param("LongEmaPeriod", 450)
                 .SetDisplay("Период длинной EMA", "Период для длинной EMA (по умолчанию 70)", "Индикаторы тренда");
 
-            _rsiPeriod = Param("RsiPeriod", 14)
+            _rsiPeriod = Param("RsiPeriod", 10)
                 .SetDisplay("Период RSI", "Период для RSI (по умолчанию 14)", "Индикаторы перекупленности/перепроданности");
 
             _bbPeriod = Param("BollingerBandsPeriod", 20)
@@ -84,17 +84,17 @@
             _rsiCloseShort = Param("RSI Close Short", 44)
                 .SetDisplay("Закрывать Short если RSI выше этого значения, 60", "", "Управление позицией");
 
-            _stopLossMultiplier = Param("StopLossMultiplier", 1.6m)
-                .SetDisplay("Множитель Stop-Loss", "Множитель ATR для Stop-Loss (по умолчанию 1.6)", "Управление позицией");
+            _stopLossMultiplier = Param("StopLossMultiplier", 1.2m)
+                .SetDisplay("Множитель Stop-Loss", "Множитель ATR для Stop-Loss (по умолчанию 1.2)", "Управление позицией");
 
             _atrPeriod = Param("AtrPeriod", 14)
                 .SetDisplay("Период ATR", "Период для ATR (по умолчанию 14)", "Индикаторы волатильности");
 
-            _bullFilter = Param("Filter to Bullish trend", 10m)
-                .SetDisplay("Фильтр бычьего тренда", "чем больше - тем меньше чувствительность к бычьему тренду (по умолчанию 10)", "Фильтры");
+            _bullFilter = Param("Filter to Bullish trend", -15m)
+                .SetDisplay("Фильтр бычьего тренда", "чем больше - тем меньше чувствительность к бычьему тренду (по умолчанию -15)", "Фильтры");
 
-            _bearFilter = Param("Filter to Bearish trend", -4m)
-                .SetDisplay("Фильтр меджвежего тренда", "чем меньше - тем меньше чувствительность к медвежему тренду (по умолчанию -4)", "Фильтры");
+            _bearFilter = Param("Filter to Bearish trend", -1m)
+                .SetDisplay("Фильтр меджвежего тренда", "чем меньше - тем меньше чувствительность к медвежему тренду (по умолчанию -1)", "Фильтры");
 
             //_checkATR = Param("ATR filter", false)
             //    .SetDisplay("Фильтр по ATR", "Фильтровать слишком низки и высокий ATR (по умолчанию Выкл)", "Фильтры");
